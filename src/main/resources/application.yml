@@ -1,0 +1,71 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: stream-rabbitmq-demo
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5656
+    username: xxx
+    password: xxx
+  cloud:
+    function:
+      definition: input1;input2;input3
+    stream:
+      rabbit:
+        bindings:
+          input1-in-0:
+            consumer:
+              exchangeType: direct
+              bindingRoutingKey: output1
+              acknowledge-mode: none
+              queueNameGroupOnly: true
+          input2-in-0:
+            consumer:
+              exchangeType: direct
+              bindingRoutingKey: output2
+              acknowledge-mode: none
+              queueNameGroupOnly: true
+          input3-in-0:
+            consumer:
+              exchangeType: direct
+              bindingRoutingKey: output3
+              acknowledge-mode: none
+              queueNameGroupOnly: true
+          output1-out-0:
+            producer:
+              exchangeType: direct
+              routingKeyExpression: "'output1'"
+              queueNameGroupOnly: true
+          output2-out-0:
+            producer:
+              exchangeType: direct
+              routingKeyExpression: "'output2'"
+              queueNameGroupOnly: true
+          output3-out-0:
+            producer:
+              exchangeType: direct
+              routingKeyExpression: "'output3'"
+              queueNameGroupOnly: true
+      bindings:
+        input1-in-0: #通道的名称
+          destination: TestExchange1 #要使用的exchange名称
+          content-type: application/json
+          group: TestExchange1.queue1 # 要使用的消息队列名称
+        input2-in-0: #通道的名称
+          destination: TestExchange2 #要使用的exchange名称
+          content-type: application/json
+          group: TestExchange2.queue2 # 要使用的消息队列名称
+        input3-in-0: #通道的名称
+          destination: TestExchange2 #要使用的exchange名称
+          content-type: application/json
+          group: TestExchange2.queue3 # 要使用的消息队列名称
+        output1-out-0: #抽样数据存储分发
+          destination: TestExchange1 #要使用的exchange名称
+          content-type: application/json
+        output2-out-0: #抽样数据存储分发
+          destination: TestExchange2 #要使用的exchange名称
+          content-type: application/json
+        output3-out-0: #抽样数据存储分发
+          destination: TestExchange2 #要使用的exchange名称
+          content-type: application/json
